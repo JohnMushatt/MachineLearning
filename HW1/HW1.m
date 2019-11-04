@@ -25,10 +25,11 @@ text(0,.1,mean_and_variance);
 %---Problem 9---
 
 %Scaled beta distribution
-%data_beta = fitdist(data,'Beta');
-mle_beta = mle(data,'distribution','Beta');
-mean_beta = mle_beta(1);
-variance_beta = mle_beta(2);
+%beta_params = betafit(data);
+data_beta = fitdist(data,'Beta');
+%mle_beta = mle(data,'distribution','Beta');
+%mean_beta = mle_beta(1);
+%variance_beta = mle_beta(2);
 %Logistic distribution
 %data_logistic = fitdist(data,'Logistic');
 mle_logistic = mle(data,'distribution','logistic');
@@ -38,7 +39,7 @@ variance_logistic = mle_logistic(2);
 %---Problem 10---
 
 
-test = kfolds(data,10);
+%test = kfolds(data,10);
 function [test, train] = kfolds(data, k)
 
   n = size(data,1);
