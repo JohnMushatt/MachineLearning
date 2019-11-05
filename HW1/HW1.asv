@@ -40,7 +40,8 @@ variance_logistic = mle_logistic(2);
 
 %---Problem 10---
 
-test = kfolds(data,10);
+
+%test = kfolds(data,10);
 function [test, train] = kfolds(data, k)
 
   n = size(data,1);
