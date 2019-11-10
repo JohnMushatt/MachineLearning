@@ -202,19 +202,12 @@ class2_samples = mvnrnd(class2_mu,class2_sigma,300);
 class3_mu = [3;3];
 class3_sigma = [4 1; 1 2];
 class3_samples = mvnrnd(class3_mu,class3_sigma,300);
-p6 = figure();
+figure();
 hold on;
-plot(1:length(class1_samples),class1_samples,'g');
-plot(1:length(class2_samples),class2_samples,'r');
-plot(1:length(class3_samples),class3_samples,'b');
+plot(1:length(class1_samples),class1_samples,'g',1:length(class2_samples),class2_samples,'r',1:length(class3_samples),class3_samples,'b');
+
 cat1_data = [class1_samples;class2_samples;class3_samples];
 cat1_mean = mean(cat1_data);
 cat1_cov = cov(cat1_data);
 
-p7_mvn = mvnrnd(cat1_mean,cat1_cov,1000);   
-p7 = figure();
-hold on;
-plot(1:length(class1_samples),class1_samples,'g');
-plot(1:length(class2_samples),class2_samples,'r');
-plot(1:length(class3_samples),class3_samples,'b');
-plot(1:length(p7_mvn),p7_mvn,'c');
+p7_mvn = mvnrnd(   
