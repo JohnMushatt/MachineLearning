@@ -1,4 +1,5 @@
 clc;
+clear;
 %4a
 file = load('assignment_2_problem_4.mat');
 indicator = file.xy(:,1);
@@ -29,8 +30,8 @@ hist_healthy = histogram(struct_4a_healthy);
 %Build Disease Classifer
 struct_4b_disease = struct_4a_disease(any(struct_4a_disease,2),:);
 struct_4b_disease_data = struct_4b_disease(:,1);
-mle_4b_disease = mle(struct_4b_disease_data,'distribution','norm');
-dist_4b_disease = makedist('Normal',mle_4b_disease(1),mle_4b_disease(2));
+mle_4b_disease = mle(struct_4b_disease_data,'distribution','bernoulli');
+dist_4b_disease = makedist('Binomial',100,mle_4b_disease);
 %Test Classifer against data
 test_4b_disease = zeros(100,2);
 count_correct = 0;
@@ -38,18 +39,18 @@ for index =1:100
     probability = pdf(dist_4b_disease,indicator(index));
     test_4b_disease(index) = probability;
     test_4b_disease(index,2) = patient(index);
-    if(probability>.80 && patient(index)==1) 
+    if(probability>1.372033444959369e-65 && patient(index)==1) 
         count_correct= count_correct+1;
     end
 end
-fprintf("Parameters for Discrete Unhealthy:\nMean: %f Variance: %f\n",mle_4b_disease(1),mle_4b_disease(2));
-fprintf("Total correct estimations for discrete unhealthy: %d/60 (%f)\n\n",count_correct,count_correct/ 60);
+fprintf("Parameters for Binomial Unhealthy:\nProbability P: %f\n",mle_4b_disease);
+fprintf("Total correct estimations for Binomial unhealthy: %d/60 (%f)\n\n",count_correct,count_correct/ 60);
 %Build Healthy Classifer
 struct_4b_healthy = struct_4a_healthy(any(struct_4a_healthy,2),:);
-struct_4b_healthy_data = struct_4b_healthy(:,2);
-mle_4b_healthy = mle(struct_4b_healthy_data,'distribution','norm');
+struct_4b_healthy_data = struct_4b_healthy(:,1);
+mle_4b_healthy = mle(struct_4b_healthy_data,'distribution','bernoulli');
 
-dist_4b_healthy = makedist('Normal',mle_4b_healthy(1),mle_4b_healthy(2));
+dist_4b_healthy = makedist('Binomial',100,mle_4b_healthy);
 %Test Classifer against data
 test_4b_healthy = zeros(100,2);
 count_correct_healthy = 0;
@@ -57,12 +58,12 @@ for index =1:100
     probability = pdf(dist_4b_healthy,indicator(index));
     test_4b_healthy(index) = probability;
     test_4b_healthy(index,2) = patient(index);
-    if(probability>.002 && patient(index)==0) 
+    if(probability <2.323555148909575e-20 && patient(index)==0) 
         count_correct_healthy= count_correct_healthy+1;
     end
 end
-fprintf("Parameters for Discrete Healthy:\nMean: %f Variance: %f\n",mle_4b_healthy(1),mle_4b_healthy(2));
-fprintf("Total correct estimations for discrete healthy: %d/40 (%f)\n\n",count_correct_healthy,count_correct_healthy/ 40);
+fprintf("Parameters for Binomial Healthy\nProbability P: %f\n",mle_4b_healthy);
+fprintf("Total correct estimations for Binomial healthy: %d/40 (%f)\n\n",count_correct_healthy,count_correct_healthy/ 40);
 
 
 
@@ -128,10 +129,10 @@ test_naive_c = zeros(100,2);
 test_naive_d = zeros(100,2);
 
 for index =1:100
-    probability_a = pdf(naive_dist_a,naive_x(index));
-    probability_b = pdf(naive_dist_b,naive_x(index));
-    probability_c = pdf(naive_dist_c,naive_x(index));
-    probability_d = pdf(naive_dist_d,naive_x(index));
+    probability_a = pdf(naive_dist_a,naive_features(index));
+    probability_b = pdf(naive_dist_b,naive_features(index));
+    probability_c = pdf(naive_dist_c,naive_features(index));
+    probability_d = pdf(naive_dist_d,naive_features(index));
     %Best classifer
     test_naive_a(index) = probability_a;
     test_naive_a(index,2) = patient(index);
@@ -147,4 +148,22 @@ for index =1:100
 
 end
 f= figure;
-scatter(test_naive_a(1),test_naive_a(2));
+scatter(test_naive_a(:,1),test_naive_a(:,2));
+
+
+
+%6
+prior = [1/3 1/3 1/3];
+mu_1 = [0,0];
+mu_2 = [1,1];
+mu_3 = [-1,1];
+
+sigma_1 = [0.7 0
+           0    .7];    
+sigma_2 = [ 0.8 .2
+           .2 .8 ];
+sigma_3 = [ 0.8 .2
+           .2 .8 ];
+       
+x1 = [-.5 .5];
+x2 = [.5 .5];
