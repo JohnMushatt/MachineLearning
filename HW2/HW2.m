@@ -147,6 +147,7 @@ x2 = -3:0.2:3;
 X = [X1(:) X2(:)];
 test1 = [-.5 .5];
 test2 = [.5 .5];
+
 sigma_1_x1 = mvnpdf(test1,mu_1,sigma_1);
 sigma_1_x2 = mvnpdf(test2,mu_1,sigma_1);
 
@@ -160,8 +161,6 @@ result_x1 = max([sigma_1_x1,sigma_2_x1,sigma_3_x1]);
 result_x2 = max([sigma_1_x2,sigma_2_x2,sigma_3_x2]);
 fprintf("x1 is class 1 with P(%f)\nx2 is class 2 with P(%f)\n",result_x1,result_x2);
 
-
-%y= reshape(y,length(x2),length(x1));
 
 
 %e1=-1/2 * log(abs(sigma_1)) - 1/2*(transpose(x1-mu_1))*(sigma_1^-1)*(x1-mu_1) + log(prior(1));
