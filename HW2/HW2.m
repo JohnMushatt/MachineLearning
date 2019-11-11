@@ -3,6 +3,7 @@ clear;
 close all;
 %4a
 file = load('assignment_2_problem_4.mat');
+temp_data = file.xy;
 indicator = file.xy(:,1);
 cont_measure = file.xy(:,2);
 patient = file.xy(:,3);
@@ -115,42 +116,19 @@ fprintf("Total correct estimations for continous healthy: %d/40 (%f)\n",count_co
 
 naive_features = file.xy(:,1:2);
 naive_y = file.xy(:,3);
+naive_cov = cov(naive_features);
 classNames = [1,0];
 prior = [.6 .4];
 Mdl = fitcnb(naive_features,naive_y, 'ClassNames',classNames,'Prior',prior);
 vals = Mdl.DistributionParameters;
-naive_dist_a = makedist('Normal',vals{1}(1),vals{1}(2));
-naive_dist_b = makedist('Normal',vals{1,2}(1),vals{1,2}(2));
-naive_dist_c = makedist('Normal',vals{2}(1),vals{2}(2));
-naive_dist_d = makedist('Normal',vals{2,2}(1),vals{2,2}(2));
-
-test_naive_a = zeros(100,2);
-test_naive_b = zeros(100,2);
-test_naive_c = zeros(100,2);
-test_naive_d = zeros(100,2);
-
-for index =1:100
-    probability_a = pdf(naive_dist_a,naive_features(index));
-    probability_b = pdf(naive_dist_b,naive_features(index));
-    probability_c = pdf(naive_dist_c,naive_features(index));
-    probability_d = pdf(naive_dist_d,naive_features(index));
-    %Best classifer
-    test_naive_a(index) = probability_a;
-    test_naive_a(index,2) = patient(index);
-    test_naive_b(index) = probability_b;
-    test_naive_b(index,2) = patient(index);
-
-    test_naive_c(index) = probability_c;
-    test_naive_c(index,2) = patient(index);
-
-    test_naive_d(index) = probability_d;
-    test_naive_d(index,2) = patient(index);
-
-
+res = Mdl.predict(naive_features);
+naive_count =0;
+for index = 1:100
+    if(res(index)==patient(index))
+        naive_count = naive_count +1;
+    end
 end
-f= figure;
-scatter(test_naive_a(:,1),test_naive_a(:,2));
-
+fprintf("Naive results: %d / 100 (%f)\n",naive_count,naive_count/100);
 
 
 %5
