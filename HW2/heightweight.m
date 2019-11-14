@@ -1,3 +1,6 @@
+clc;
+clear;
+close all;
 %% Linear/ quadratic discriminant analysis for Height Weight data
 %
 %%
@@ -58,4 +61,37 @@ for tied=[false true]
         printPmtkFigure(sprintf('heightWeightQDA'))
     end
 end
+
+[cc,hh]=contour(x,y,g{1} - g{2},[0 0], '-k');
+contour_points = hh.ContourMatrix();
+%contour_points = (2:end);
+contour_x = hh.ContourMatrix(1,2:end);
+contour_y = hh.ContourMatrix(2,2:end);
+qda = spline(contour_y,contour_x);
+test_data = rawdata(:,2);
+predicted = ppval(qda,test_data);
+test_results = zeros(210,1);
+ccount=0;
+for index =1:length(predicted) 
+    element = predicted(index);
+    actual_result = rawdata(index,3);
+    if element >= actual_result || index>200
+        test_results(index)= 1;
+    else 
+        test_results(index) = 2;
+    end
+    %res = abs(act_weight-element);
+   	%ccount = ccount+ res < 2;
+    op1 = test_results(index);
+    op2 =rawdata(index,1);
+    if(test_results(index) ~= rawdata(index,1))
+        ccount= ccount+ 1;
+    end
+        
+end
+figure();
+scatter(1:210,test_results);
+hold on;
+error_rate = ccount / 210;
+fprintf("Error rate for qda/lda: %f",error_rate);
 

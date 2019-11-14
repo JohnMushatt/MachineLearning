@@ -1,6 +1,35 @@
 clc;
 clear;
 close all;
+
+p3_data = transpose([2.0 -3.6 2.2 4.9 1.5 3.1 2.2 -.9 .9 -2.4; 
+    7.89 -16.55 6.73 17.91 2.06 12.84 8.13 -5.35 3.97 -12.31]);
+mle_a_top=0;
+mle_a_bot  =0;
+mle_b=0;
+v_data = var(p3_data);
+variance_val=0;
+for index =1:length(p3_data)
+    val_x = p3_data(index);
+    val_y = p3_data(index,2);
+    mle_a_top = mle_a_top + val_x;
+    mle_a_bot= mle_a_bot+ val_x^2;
+    mle_b = mle_b +val_y -val_x;
+    
+    variance_val = -length(p3_data) / val_x + (val_y - (val_x)) / (val_x)^3;
+end
+
+mle_a = mle_a_top / mle_a_bot;
+fprintf("MLE_A = %f\tMLE_B = %f\t Variance = %f\n",mle_a,mle_b,variance_val);
+figure();
+lin_data = computeLinModel(mle_a,mle_b,p3_data);
+lin_plot = lin_data(:,2);
+plot(p3_data(:,1),p3_data(:,2),'+',p3_data(:,1),lin_plot);
+%3
+
+
+
+
 %4a
 file = load('assignment_2_problem_4.mat');
 temp_data = file.xy;
@@ -165,7 +194,9 @@ fprintf("x1 is class 1 with P(%f)\nx2 is class 2 with P(%f)\n",result_x1,result_
 
 %e1=-1/2 * log(abs(sigma_1)) - 1/2*(transpose(x1-mu_1))*(sigma_1^-1)*(x1-mu_1) + log(prior(1));
 %6
-
+%-------------------------
+%see heightweight.m
+%-------------------------
 
 %7
 class1_mu = [1;-1];
@@ -195,3 +226,11 @@ plot(1:length(class1_samples),class1_samples,'g');
 plot(1:length(class2_samples),class2_samples,'r');
 plot(1:length(class3_samples),class3_samples,'b');
 plot(1:length(p7_mvn),p7_mvn,'c');
+
+function points = computeLinModel(a,b,d) 
+    points = zeros(length(d),2);
+    for index = 1:length(d)
+        points(index) = d(index);
+        points(index,2) = a * points(index) + b;
+    end
+end
