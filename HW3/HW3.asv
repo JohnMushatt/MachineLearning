@@ -141,7 +141,7 @@ fprintf("Class 1 prior: %f\nClass 2 prior: %f\nClass 3 prior: %f\n",class1_prior
 
 
 indices = crossvalind('kfold',x,5);
-test_data = zero  
+test_data = zero
 p6_mdl = fitcnb([x,y],z);
 isLabel_nb  = resubPredict(p6_mdl);
 subplot(2,2,1);
