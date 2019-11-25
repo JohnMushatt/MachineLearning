@@ -34,10 +34,10 @@ fprintf("\n-------------PART B-------------\n");
 
 x1x2_y = LinearModel.fit(exam_scores(:,1:2),final_exam);
 RSSx1x2 = x1x2_y.Rsquared.Ordinary;
-predict(x1x2_y,exam_scores(:,1:2))
+x1x2_pred = predict(x1x2_y,exam_scores(:,1:2))
 x1x3_y = LinearModel.fit([exam_scores(:,1) exam_scores(:,3)],final_exam);
 RSSx1x3 = x1x3_y.Rsquared.Ordinary;
-predict(x1x3_y,[exam_scores(:,1) exam_scores(:,3)])
+x1x3_pred = predict(x1x3_y,[exam_scores(:,1) exam_scores(:,3)])
 
 x2x3_y = LinearModel.fit(exam_scores(:,2:3),final_exam);
 RSSx2x3 = x2x3_y.Rsquared.Ordinary;
@@ -53,6 +53,22 @@ RSSx1x2x3 = x1x2x3.Rsquared.Ordinary;
 x1x2x3_pred = predict(x1x2x3,exam_scores)
 compareVecMean(x1x2x3_pred,final_exam);
 fprintf("\n-----------------------\nRSS for x1x2x3: %f\n",RSSx1x2x3);
+
+
+Resx1x2x3 = x1x2x3.Residuals;
+figure(1);
+x1x2x3.plotResiduals;
+
+%% D
+compareVecMean(x1_pred,final_exam);
+compareVecMean(x2_pred,final_exam);
+compareVecMean(x3_pred,final_exam);
+
+compareVecMean(x1x2,final_exam);
+compareVecMean(x1x3,final_exam);
+compareVecMean(x2x3,final_exam);
+
+compareVecMean(x1x2x3_pred,final_exam);
 
 %% Helper functions
 
@@ -74,7 +90,8 @@ function mean_difference = compareVecMean(vec1,vec2)
     mean_difference = mean(mean_difference);
     v1_mean = mean(vec1);
     v2_mean = mean(vec2);
-    v1_var = variance(vec1);
-    v2_var = variance(vec2);
-    fprintf("| Mean Difference\t|\t
+    v1_var = var(vec1);
+    v2_var = var(vec2);
+    fprintf("|\tMean Difference\t  |\tV1 Mean\t  |\tV2 Mean\t  |\tV1 Variance\t  |\tV2 Variance\t  |\n");
+    fprintf("\t\t%e\t\t%f\t%f\t%f\t\t%f\n",mean_difference,v1_mean,v2_mean,v1_var,v2_var);
 end
