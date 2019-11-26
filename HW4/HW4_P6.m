@@ -7,16 +7,18 @@ close all;
 file = table2array(    readtable("data.xlsx"));
 
 exam_scores = file(:,1:3);
+
 final_exam = file(:,4);
 
 e1 = exam_scores(:,1);
 e2 = exam_scores(:,2);
 e3 = exam_scores(:,3);
 
+
 %% A
 fprintf("\n-------------PART A-------------\n");
-
-x1 = LinearModel.fit(e1,final_exam);
+%[B,dev,stats] = mnrfit(e1,final_exam);
+x1 =  LinearModel.fit(e1,final_exam);
 x2 = LinearModel.fit(e2,final_exam);
 x3 = LinearModel.fit(e3,final_exam);
 
@@ -48,12 +50,15 @@ fprintf("x1x2 acc: %f\tx1x3 acc: %f\tx2x3 acc: %f\n",x1x2_acc,x1x3_acc,x2x3_acc)
 fprintf("\n-------------PART C-------------\n");
 
 x1x2x3 = LinearModel.fit(exam_scores,final_exam);
-
+bic =  log(x1x2x3.MSE) -1/2*x1x2x3.DFE*log(25);
 x1x2x3_pred = predict(x1x2x3,exam_scores);
 x1x2x3_acc = compareVecThresh(x1x2x3_pred,160)/25;
-fprintf("x1x2x3 acc: %f\n",x1x2x3_acc);
+fprintf("x1x2x3 acc: %f\tBIC: %f\n",x1x2x3_acc,bic);
 
 %% Helper Functions
+
+[fList,plist] = matlab.codetools.requiredFilesAndProducts('HW4_P3.m');
+plist.Name
 function num_same = compareVec(vec1,vec2) 
     num_same = 0;
     for index = 1: length(vec1)
@@ -70,4 +75,18 @@ function num_passed = compareVecThresh(vec1,thresh)
             num_passed = num_passed+ 1;
         end
     end
+end
+
+function new_mat = norm_mat(mat)
+    new_mat = zeros(length(mat),1);
+    max_val =0;
+    for i = 1:length(mat)
+        if(mat(i)>=max_val)
+            max_val=mat(i);
+        end
+    end
+    for i = 1:length(mat)
+        new_mat(i) = mat(i) / (max_val);
+    end
+    
 end

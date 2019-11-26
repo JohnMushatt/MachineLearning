@@ -78,8 +78,10 @@ compareVecMean(x2x3_pred,final_exam);
 fprintf("X1, X2, and X3\n");
 compareVecMean(x1x2x3_pred,final_exam);
 
-%% Helper functions
 
+%% Helper functions
+[fList,plist] = matlab.codetools.requiredFilesAndProducts('HW4_P3.m');
+plist.Name
 function num_same = compareVec(vec1,vec2) 
     num_same = 0;
     for index = 1: length(vec1)
@@ -103,3 +105,4 @@ function mean_difference = compareVecMean(vec1,vec2)
     fprintf("|\tMean Difference\t  |\tV1 Mean\t  |\tV2 Mean\t  |\tV1 Variance\t  |\tV2 Variance\t  |\n");
     fprintf("\t\t%e\t\t%f\t%f\t%f\t\t%f\n",mean_difference,v1_mean,v2_mean,v1_var,v2_var);
 end
+
