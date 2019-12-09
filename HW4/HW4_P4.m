@@ -64,3 +64,5 @@ fprintf("LDA Training accuracy: %f\n",acc_tr_lda);
 
 acc_te_lda = 1 - loss(lda,testing_data_features,testing_data_labels);
 fprintf("LDA Testing accuracy: %f\n", acc_te_lda);
+[fList,plist] = matlab.codetools.requiredFilesAndProducts('HW4_P3.m');
+plist.Name
